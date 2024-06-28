@@ -1,2 +1,4 @@
 **/*.json
 **/*.csv
+**/credentials
+**/__pycache__

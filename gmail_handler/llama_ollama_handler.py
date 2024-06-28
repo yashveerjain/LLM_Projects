@@ -1,53 +1,47 @@
 import ollama
-# response = ollama.chat(model='llama3', messages=[
-#   {
-#     'role': 'user',
-#     'content': 'Why is the sky blue?',
-#   },
-# ])
 
+
+# Define the message to be processed
 message = """
- Hello Yashveer,
+Hello Joe,
 
-You might be a great fit for the new positions we just posted! We hope you're still interested in finding your dream job at Ford Motor Company. If so, we invite you to see if this might be the one. Learn more here:
+We hope you're still interested in finding your dream job at Ford Motor Company. If so, we invite you to see if this might be the one. Learn more about our new positions below:
 
 ADAS Embedded Software Performance Engineer
 Technical Expert - Electronic Module Assembly Verification for Full-Service Supplier Electronic Control Units
 Digitalization & Transformation OrgCM Communication Specialist
 Software Engineer
 Exterior Systems Design & Release Engineer
- 
+
 See all opportunities
- 
+
 Sincerely,
-Ford Talent Acquisition Team 
+Ford Talent Acquisition Team
 """
-# message = """ 	
-# ello yashveer,
-
-# Thank you for joining HII's Talent Community on 2/11/24 and requesting notifications of available career opportunities. We are happy you have decided to build your career with HII’s Mission Technologies division!
-
-# Your job alert request matched the following openings:
-# Event Technical Lead - Virginia Beach, VA, Virginia, United States
-# Project Manager (ITSIS) - 19148 - Virginia Beach, VA, Virginia, United States
-# Subcontracts Administrator (Subcontracts Administrator 2) - 17558 - Virginia Beach, VA, Virginia, United States
-# Contract Administrator (Contract Administrator 2) - 18292 - Virginia Beach, VA, Virginia, United States
-# Pipefitter - 19107 - Virginia Beach, VA, Virginia, United States
-
-
-# Search for and apply for other opportunities by visiting us at hii.com/careers.
-# """
 
 def get_response(message, subject):
+  """
+  This function generates a response for a given email message and subject.
+  The response is based on a set of predefined patterns and examples.
+  The format of the response is (|status--job_title--company_name--brief_reasoning|)
+
+  Args:
+      message (str): The email message content
+      subject (str): The email subject line
+
+  Returns:
+      str: The generated response
+  """
+  
   prompt = f""" You're AI assistent, and will organising my mail, by telling the mail status (rejected \ need action \ applied \ promotional \ personal\ job opportunities) or need further action by the user for that mail, additional information needed are job title if any otherwise `None`, and company name if not than `None`,  
   please note : the status are telling user about the mail status, such as, `need action` means that important task pending and need attention or selected for job, please not attach this status to advertising messages  or job application confirmation messages, where as applied means the mail is for confirmation that application is submitted succefully and can visit career page or look for message from company, rejected means you are no longer under consideration for the role, personal email means emails send by individual person can be HR or any other person personally,
   job opportunities status if the message recommends about the new job opportunities or openings and lastly promotional is if companies advertising or asking subscriptions or random email not useful for the user as it is not important.
   your output format `should` be in this way : '(|status--job_title--company name--brief reasoning|)`  and should not contain anything else no text nothing.
-  Attaching few examples for your references:
+  Attaching few examples for your references, please understand the reasoning behind status before answering:
   Example 1:
   `
   subject : `Update on your Avanade application for FUTURE OPPORTUNITY - AI Engineer` 
-  message : `Hi Yashveer,
+  message : `Hi Joe,
 
   Thank you for your interest, however, we won't be moving ahead with your application at Avanade at this point.
 
@@ -64,7 +58,7 @@ def get_response(message, subject):
   Example 2:
   `
   subject : `Your Amazon job application is incomplete`
-  message : `Hi Yashveer,
+  message : `Hi Joe,
 
   We noticed that your application for the position of Software Engineer II, Annapurna Labs (ID: 2650974) is incomplete.
 
@@ -75,7 +69,7 @@ def get_response(message, subject):
   Example 3:
   `
   subject : `Outrider -- Thanks for your application!!`
-  message: `Hi Yashveer!
+  message: `Hi Joe!
   
   Thanks for your interest in Outrider! We received your application for the Engineer, Computer Vision & Machine Learning (3-month contract) role and we're delighted you'd consider joining our team.
   
@@ -88,27 +82,54 @@ def get_response(message, subject):
   response: (|applied--Computer Vision & Machine Learning Engineer--Outrider--Got the green light from Outrider to review your application for that 3-month CV & ML gig! Fingers crossed, but gotta keep an eye on their jobs page - seems like they're hiring like crazy!|)`
 
   Example 4:
-  `subject : `AI and your tech career: 10-part article series.`
-  message : `Welcome to "AI and Your Tech Career," Dice's 10-part article series walking through the basics of how to successfully integrate artificial intelligence and machine learning into your tech career journey.
-  We'll cover everything from the most popular jobs and skills to non-technical roles in AI, industry applications, and more. You can build your dream tech career, and AI can help!
+  `subject : `The hits and misses in Delhivery's financials`
+  message : `Dear Reader,
 
-  Part 1: Unveiling AI Career Opportunities: Key Roles and Emerging Hybrid Jobs in Artificial Intelligence`
+Delhivery, known for e-commerce logistics, expanded into B2B express, acquiring a player in 2021 for INR1,511 crore ahead of its 2022 IPO. Despite operational challenges post-merger, Delhivery has successfully navigated them.
 
-  response: (|promotional--None--Dice--While this is informative, it's also promotional content from Dice (a job search website).|)`
+Tech
+Delhivery's B2B express logistics, affected post-Spoton acquisition, has rebounded well, but needs improvement in revenue and profitability.
+
+Markets
+Identifying potential 1000% return stocks in the current market involves monitoring low-valuation stocks showing profitability signs.
+
+Auto + Aviation
+A Maruti hatchback surpassed Alto as the bestseller in FY24.
+
+Corporate Governance
+Legal experts differ on the Tata Trusts vs Shapoorji Pallonji Group dispute.
+
+Prime Decoder
+Car manufacturers face historic inventory build-ups. What implications does this have for buyers?
+
+Markets
+Exide Industries has doubled investors' wealth in a year, with indications of further growth. Short-term traders may consider buying the stock for a target price of INR530 in two-three weeks.
+
+GREENTOON OF THE DAY
+ET Prime Team
+Whatsapp Banner
+Popular among readers
+
+PS: For queries, email care@etprime.com. Unsubscribe here to stop receiving this newsletter or ensure delivery by adding the sender to your address book.
+
+Did you enjoy today's newsletter?
+`
+
+  response: (|promotional--None--etprime--While this is informative, it's also promotional content as a newsletter.|)`
 
   Example 5:
   `
-  subject : Yashveer, we have received your application
-  message :  Hello Yashveer,
+  subject : `Joe, we have received your application`
+  message :  `Hello Joe,
 
 We have received your application for Software Engineer II - Surgical Robotics. We are currently reviewing it and will reach out again as soon as there is an update. 
 
 To track the status of your application, browse additional job opportunities or update your profile, you must create a candidate log-in account using this link.
 
 Best Regards,
-Medtronic Talent Team
+Medtronic Talent Team`
 
-  response: (|job opportunities--Software Engineer 2--Medtronic--Create a candidate log-in account to track your app status for the Surgical Robotics role at Medtronic. You can also browse other job openings and update your profile!|)
+  response: (|applied--Software Engineer 2--Medtronic--Create a candidate log-in account to track your app status for the Surgical Robotics role at Medtronic. You can also browse other job openings and update your profile!|)
   `
   So similarly give the response for the following:,
   subject : `{subject}`
@@ -117,24 +138,10 @@ Medtronic Talent Team
   response: 
   """
 
-  # print(prompt)
-
-  # print("================")
-  # response_parts = ollama.generate(model='llama3', prompt=prompt, stream=True)
-
-  # for response in response_parts:
-  #   print(response["response"], end="",flush=True)
-
-  # response = ollama.chat(model='llama3', messages=[
-  #   {
-  #     'role': 'user',
-  #     'content': prompt,
-  #   },
-  # ])
-  # print(response['message']['content'])
 
   response = ollama.generate(model='llama3', prompt=prompt)
   return response["response"]
 
 if __name__ == "__main__":
+  # Test the llama
   print(get_response(message, "New job opportunities at Ford Global Career Site"))#"New jobs posted from jobs.hii-tsd.com"))

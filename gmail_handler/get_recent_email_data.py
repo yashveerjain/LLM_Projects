@@ -2,16 +2,26 @@ import pandas as pd
 from datetime import datetime, timedelta
 import re
 import traceback
+import argparse
 
 from llama_ollama_handler import get_response
 from simplegmail import Gmail
 
+parser = argparse.ArgumentParser()
 
-gmail = Gmail()
+parser.add_argument("--email_id",default="me",type=str,help="Organising email required email address")
+parser.add_argument("--client_secret_file","-csf",default="",type=str,help="Path to client secret file retrieve from google workspace api format is json")
+parser.add_argument("--creds","-c",default="",type=str,help="Path to Credentials generated as token to access email without login, retrieve automatically but give path to store it, it's format is json")
+
+args = parser.parse_args()
+user_id = args.email_id
+
+gmail = Gmail(client_secret_file=args.client_secret_file,creds_file=args.creds)
 
 labels = gmail.list_labels()
 
 status2label = {
+    'jobs' : 'Jobs',
     'rejected' : 'Jobs/Rejected',
     'applied' : 'Jobs/Applied',
     'promotional' : 'promotional',
@@ -23,40 +33,36 @@ status2label = {
 
 status2labelids = {} 
 for status,label_name in status2label.items():
+    flag = False
     for label in labels:
         if label.name==label_name:
             status2labelids[status] = label.id
-
+            flag = True
+    if not flag:
+        label = gmail.create_label(label_name)
+        status2labelids[status] = label.id
 print(status2labelids)
 
 def organize_email(message):
-    if message.html:
-        body = message.html
-        # print("Message Body: " + message.html)
-    else:
-        body = message.snippet
-    # print("body : ",body)
-    resp = get_response(body,message.subject)
-    # print("\n resp :",resp)
+    body = message.html if message.html else message.snippet
+    response = get_response(body, message.subject)
     try:
-        matches = re.findall(r'\(\|(.*?)\|\)', resp)
-        # print(matches[0].split("--"))
-        status,jt,cn,reason = matches[0].split("--")[:4]
-        status = status.lower()
-        if status not in status2label.keys():
-            return (False, resp, 'not sure')
-        # new_row = [cn, jt, status,message.date,message.sender,message.subject,reason]
-        # df.loc[len(df)] = new_row
-        return (True, resp,status)
-    except Exception as e:
-        traceback.print_exc()
-        return (False,resp,'not sure')
+        match = re.search(r'\(\|(.*?)\|\)', response)
+        if match:
+            data = match.group(1).split("--")
+            status, job_title, company_name, reason = data[:4]
+            status = status.lower()
+            if status in status2label.keys():
+                return True, response, status
+    except Exception:
+        pass
+    return False, response, 'not sure'
 
 if __name__ == "__main__":
 
     # Set the start and end dates
-    end_date = datetime(2024, 5, 1)  # May 20, 2023
-    start_date = datetime(2024, 4, 1)   # May 15, 2023
+    end_date = datetime(2024, 6, 8)  # May 20, 2023
+    start_date = datetime(2024, 6, 7)   # May 15, 2023
 
     # Convert dates to Gmail API format
     start_date_str = start_date.strftime('%Y/%m/%d')
@@ -125,6 +131,6 @@ if __name__ == "__main__":
             df.loc[len(df)] = ['','','',message.date,message.sender,message.subject,message.snippet]
             gmail.add_label_to_email(msg_id=message.id, label_id=status2labelids['not sure'])
     df['date'] = pd.to_datetime(df['date'])
-    # query = query.replace("\\","-")
+
     df.to_csv(f"{filename}_email_data.csv",index=False)
     print(df)
