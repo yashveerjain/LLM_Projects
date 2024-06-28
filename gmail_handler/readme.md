@@ -52,6 +52,7 @@ To work with Gmail, you need to follow these steps:
 **Run the code**: Once you have the credentials file, you can run the code using the following command:
 
 > pip install -r requirements.txt
+
 > python get_recent_email_data.py --client_secret_file path/to/client_secret.json --creds path/to/token.json
 
 **Note :** Give path to client_secret.json and token.json
