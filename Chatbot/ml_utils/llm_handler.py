@@ -1,3 +1,5 @@
+import os
+
 # !pip install torch
 import torch
 
@@ -18,8 +20,12 @@ from langgraph.graph import START, MessagesState, StateGraph
 ## langraph is useful for storing the conversation
 
 
+# !pip install python-dotenv
+from dotenv import load_dotenv
 
-login(token = "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")
+load_dotenv()
+
+login(token = os.environ["HUGGINGFACE_API_TOKEN"])
 
 class LLMHandler:
     def __init__(self, model_id = "meta-llama/Llama-3.2-3B-Instruct") -> None:
