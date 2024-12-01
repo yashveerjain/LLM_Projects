@@ -2,3 +2,6 @@
 **/*.csv
 **/credentials
 **/__pycache__
+**/*.env
+**/db
+**/*.ipynb
