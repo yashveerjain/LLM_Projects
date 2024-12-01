@@ -16,4 +16,6 @@ Details about how to use this feature are available [here](gmail_handler/readme.
 
 This folder contains the implementation of chatbot based on LLM based LLAMA 3.2-3B-Instruct model from [Huggingface](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct), and VLM based SmolVLM-Instruct models from [Huggingface](https://huggingface.co/HuggingFaceTB).
 
+![](assets/working-vid-gif.gif)
+
 ### For more details on how to use this feature, please refer to the [readme](chatbot/readme.md) file.

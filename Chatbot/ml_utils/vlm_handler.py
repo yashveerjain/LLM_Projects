@@ -1,3 +1,5 @@
+import os
+
 # !pip install torch
 import torch
 
@@ -17,8 +19,11 @@ from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 # from langgraph.graph import START, MessagesState, StateGraph
 from langchain_core.messages import HumanMessage
 from langchain_community.chat_message_histories import SQLChatMessageHistory
-## langraph is useful for storing the conversation
 
+# !pip install python-dotenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 login(token = os.environ["HUGGINGFACE_API_TOKEN"])
 
@@ -116,7 +121,7 @@ class VLMHandler:
         if len(images) > 0:
             messages[len(messages)-1].content = [{"type" : "image"}]*len(images) + messages[len(messages)-1].content
 
-        print("Input messages : ", messages)
+        # print("Input messages : ", messages)
         temp_messages = self._get_recent_messages(messages)
         # print("temp_messages : ", temp_messages)
 

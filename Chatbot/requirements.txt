@@ -4,3 +4,4 @@ langchain-huggingface
 streamlit
 fastapi
 langgraph
+python-dotenv   

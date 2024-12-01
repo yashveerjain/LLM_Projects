@@ -11,4 +11,6 @@ This used rag to retreive context and then locally run LLAMA3.2-instruct 3b for 
 
 This used VLM to retreive context and then locally run SmolVLM huggingface for response, this model has shown better results than other models for VLM related tasks.
 
+![](assets/working-vid-gif.gif)
+
 ### more details on how to use this feature, please refer to the [readme](vlm_chatbot_readme.md) file.
