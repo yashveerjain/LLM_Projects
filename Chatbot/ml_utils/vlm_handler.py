@@ -67,7 +67,8 @@ class VLMHandler:
         A function that calls the LLM model and formats the output properly.
 
         Args:
-            state (MessagesState): The current state of the conversation.
+            messages (list): A list of messages.
+            images (list): A list of images (PIL Images) to be processed by the chatbot.
 
         Returns:
             dict: A dictionary with a single key "messages" containing the response as a list of messages.
@@ -97,6 +98,19 @@ class VLMHandler:
         return generated_text 
 
     def get_response(self, message="hi", images = [], rag_context = "", session_id="random123", max_new_tokens=256):
+        """
+        Gets a response from the chatbot given a user's message and context.
+
+        Args:
+            message (str): The user's message.
+            images (list): A list of images (PIL Images) to be processed by the chatbot.
+            rag_context (str): The context from the RAG model.
+            session_id (str): The unique session ID for the conversation.
+            max_new_tokens (int): The maximum number of tokens to generate.
+
+        Returns:
+            str: The response from the chatbot.
+        """
         config = {"configurable": {"thread_id": session_id}}
         # message += " \nSales Assistant: "
         input_message = []
@@ -175,9 +189,22 @@ class VLMHandler:
         return {"role": role, "content": message.content}
 
 
-    def _get_recent_messages(self, messages):
-        
+    def _get_recent_messages(self, messages):        
+        """
+        Trims and formats the list of messages to keep the most recent ones based on token count.
 
+        This function processes the given list of messages, trimming it to retain only the most
+        recent messages that fit within the specified maximum token count. The trimming strategy
+        starts and ends with specified message types, and ensures inclusion of system messages
+        if present in the original history. The trimmed messages are then converted to a specific
+        format and returned.
+
+        Args:
+            messages (list): A list of messages to be processed.
+
+        Returns:
+            list: A list of formatted messages after trimming based on token count.
+        """
         message_trim = trim_messages(
             messages,
             # Keep the last <= n_count tokens of the messages.
@@ -215,6 +242,15 @@ class VLMHandler:
 
     def extract_last_assistant_message(self, conversation):
         # Split by the assistant marker
+        """
+        Extract the last assistant message from the conversation.
+
+        Args:
+            conversation (str): The conversation to extract from.
+
+        Returns:
+            str: The last assistant message, or None if none was found.
+        """
         assistant_start = conversation.rfind("Assistant: ") + len("Assistant: ")
         if assistant_start == -1:
             return None  # No assistant message found
@@ -233,18 +269,6 @@ class VLMHandler:
 
 if __name__ == "__main__":
     
-    # # Test the llama
-    # messages = [
-    #     {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
-    #     {"role": "user", "content": "Who are you?"},
-    # ]
-    # outputs = pipe(
-    #     messages,
-    #     max_new_tokens=256,
-    # )
-
-
-    # print(outputs[0]["generated_text"][-1])
 
     vlm = VLMHandler()
     while True:
