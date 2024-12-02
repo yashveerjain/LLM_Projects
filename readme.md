@@ -7,8 +7,7 @@ This repository is a collection of projects that use Large Language Models (LLMs
 
 This repository is designed to make your Google Workspace handling easier, with tools for automatic calendar sync, email labeling, task scheduling, and more. Whether you're a busy professional or a busy professional with a lot of email, this repository has got you covered. 
 
-### For Gmail organizing and automatic labeling
-Details about how to use this feature are available [here](gmail_handler/readme.md).
+### For Gmail organizing and automatic labeling details are available [here](gmail_handler/readme.md).
 
 --- 
 
